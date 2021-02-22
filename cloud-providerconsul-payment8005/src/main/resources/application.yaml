@@ -1,0 +1,18 @@
+# consul服务端口号
+server:
+  port: 8005
+
+spring:
+  application:
+    name: consul-provider-payment
+
+  cloud:
+    # consul注册地址
+    consul:
+      host: 47.110.247.184
+      port: 8500
+      discovery:
+        service-name: ${spring.application.name}
+        # 出掉去前端页面查看时爆红叉
+        heartbeat:
+         enabled: true

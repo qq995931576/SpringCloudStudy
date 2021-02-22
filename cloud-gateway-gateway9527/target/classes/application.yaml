@@ -1,0 +1,45 @@
+server:
+  port: 9527
+
+spring:
+  application:
+    name: cloud-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true  #开启从注册中心动态创建路由的功能，利用微服务名称进行路由(默认false)
+
+      routes:
+        - id: payment_route # 路由的id,没有规定规则但要求唯一,建议配合服务名
+          #匹配后提供服务的路由地址
+#          uri: http://localhost:8001
+          uri: lb://cloud-payment-service # lb代表从注册中心获取服务
+          predicates:
+            - Path=/payment/get/** # 断言，路径相匹配的进行路由
+
+        - id: payment_route2
+#          uri: http://localhost:8001
+          uri: lb://cloud-payment-service
+          predicates:
+            - Path=/payment/lb/** #断言,路径相匹配的进行路由
+            - After=2021-02-09T13:13:15.803+08:00[Asia/Shanghai] #在这个时间之后这个 /payment/lb/ 请求才会有效
+#            - Before=2021-02-10T15:13:15.803+08:00[Asia/Shanghai] #指定时间前才能访问（Before）
+#            - Between=2021-02-09T13:13:15.803+08:00[Asia/Shanghai],2021-02-10T15:13:15.803+08:00[Asia/Shanghai] #指定时间内才能访问（Between）
+#            - Cookie=username,achang   #带Cookie，并且username的值为 achang
+#            - Header=X-Request-Id, \d+
+#            - Host=**.achang.com
+#            - Method=GET #要求请求为GET请求
+#            - Query=username, \d+ #要求请求参数必须有username，且为整数
+
+eureka:
+  instance:
+    hostname: cloud-gateway-service
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      #单机版
+      defaultZone: http://eureka7001.com:7001/eureka/
+      #集群版
+      #defaultZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka,http://eureka7003.com:7003/eureka

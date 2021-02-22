@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.achang.springcloud.dao.PaymentDao">
+    <!--  Payment标红了不用管，因为我们已经在yml文件中指定了Payment的位置了  -->
+    <insert id="add" parameterType="Payment" useGeneratedKeys="true" keyProperty="id">
+        insert into payment(serial) values(#{serial})
+    </insert>
+
+    <resultMap id="BaseResultMap" type="com.achang.springcloud.bean.Payment" >
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <id column="serial" property="serial" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--返回用resultMap，防止命名不规范-->
+    <select id="getPaymentById" parameterType="Long" resultMap="BaseResultMap">
+        select * from payment where id=#{id}
+    </select>
+</mapper>
